@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Manajemen Data Pengguna</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .highlight {
+            background-color: #f0f8ff;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Sistem Manajemen Data Pengguna</h1>
+
+    <p>Jumlah Pengguna: <span id="userCount">0</span></p>
+
+    <table id="userTable">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>ID Pengguna</th>
+                <th>Tanggal Lahir</th>
+                <th>Login Terakhir</th>
+                <th>Usia</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data pengguna akan dimasukkan di sini oleh JavaScript -->
+        </tbody>
+    </table>
+
+    <button class="btn" onclick="addUser()">Tambah Pengguna Baru</button>
+
+    <h3>Operasi Pengguna</h3>
+    <p><strong>Periksa Usia Pengguna Terbaru:</strong></p>
+    <button class="btn" onclick="checkAge()">Periksa Usia</button>
+
+    <p><strong>File Manipulasi (contoh error handling):</strong></p>
+    <button class="btn" onclick="handleFile()">Baca File</button>
+
+    <p class="error" id="fileError"></p>
+</div>
+
+<script>
+// Daftar pengguna contoh
+let users = [
+    { id: 1, name: "John", birthDate: new Date(1990, 4, 1), lastLogin: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) },
+    { id: 2, name: "Jane", birthDate: new Date(1985, 9, 12), lastLogin: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) },
+    { id: 3, name: "Bob", birthDate: new Date(2000, 6, 15), lastLogin: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000) }
+];
+
+// Fungsi untuk menambahkan pengguna baru
+function addUser() {
+    let newUser = {
+        id: users.length + 1,
+        name: "New User",
+        birthDate: new Date(2001, 2, 20),
+        lastLogin: new Date()
+    };
+    users.push(newUser);
+    renderUserTable();
+}
+
+// Fungsi untuk memeriksa usia pengguna
+function checkAge() {
+    let latestUser = users[users.length - 1];
+    let age = calculateAge(latestUser.birthDate);
+    alert(`Usia pengguna ${latestUser.name} adalah: ${age} tahun`);
+}
+
+// Fungsi untuk menghitung usia berdasarkan tanggal lahir
+function calculateAge(birthDate) {
+    let today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    let m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+// Fungsi untuk menangani pembacaan file dengan pengecualian
+function handleFile() {
+    try {
+        // Meniru percakapan dengan file yang tidak ada
+        throw new Error("File tidak ditemukan!");
+    } catch (e) {
+        document.getElementById('fileError').innerText = e.message;
+    }
+}
+
+// Fungsi untuk merender tabel pengguna
+function renderUserTable() {
+    const tableBody = document.getElementById("userTable").getElementsByTagName("tbody")[0];
+    tableBody.innerHTML = ""; // Bersihkan tabel yang ada
+
+    users.forEach(user => {
+        let row = tableBody.insertRow();
+        row.insertCell(0).textContent = user.name;
+        row.insertCell(1).textContent = user.id;
+        row.insertCell(2).textContent = user.birthDate.toLocaleDateString();
+        row.insertCell(3).textContent = user.lastLogin.toLocaleDateString();
+        row.insertCell(4).textContent = calculateAge(user.birthDate);
+    });
+
+    document.getElementById("userCount").textContent = users.length;
+}
+
+// Inisialisasi data pengguna saat pertama kali halaman dimuat
+renderUserTable();
+</script>
+
+</body>
+</html>
